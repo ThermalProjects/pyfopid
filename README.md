@@ -93,11 +93,16 @@ The test suite (`pytest`) checks:
   the accumulated integral with a short memory.
 - Sample-by-sample agreement (rtol 1e-9) in closed loop with an independent
   transcription of an FOPID firmware used on a Peltier test bench.
+- Cross-validation against FOMCON 1.50.4 (MATLAB): Oustaloup approximations
+  identical to round-off for |α| ≤ 0.5 and more accurate for |α| > 0.5
+  (0.54° vs 5.09° phase error at α = −0.9); FOPID time response identical to
+  FOMCON `lsim` (relative difference 7.5e-12). See
+  [`validation/fomcon`](validation/fomcon/README.md).
 - Compiled C output against Python for all integral/derivative options.
 
 ## Roadmap
 
-- [ ] Cross-validation against FOMCON (MATLAB) on reference problems
+- [x] Cross-validation against FOMCON (MATLAB) on reference problems
 - [ ] Refined Oustaloup and discrete-time approximations (Tustin/Al-Alaoui CFE)
 - [ ] Fractional-order transfer functions (FOTF) with time and frequency responses
 - [ ] FOPID tuning (frequency-domain specifications, multi-objective with pymoo)
