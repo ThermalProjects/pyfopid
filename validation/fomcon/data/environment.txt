@@ -1,0 +1,7 @@
+MATLAB 26.2.0.3433840 (R2026b) Update 1
+Control System Toolbox 26.2
+MATLAB 26.2
+MATLAB Copilot 26.2
+fotf: C:\Users\termo\AppData\Roaming\MathWorks\MATLAB Add-Ons\fomcon@1.50.4\@fotf\fotf.m
+oustapp: C:\Users\termo\AppData\Roaming\MathWorks\MATLAB Add-Ons\fomcon@1.50.4\utilities\approx\oustapp.m
+fracpid: C:\Users\termo\AppData\Roaming\MathWorks\MATLAB Add-Ons\fomcon@1.50.4\controllers\pid\fracpid.m
