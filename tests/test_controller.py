@@ -52,9 +52,10 @@ def test_pure_proportional(mode):
     assert [c.step(e) for e in (1.0, -2.0, 0.5)] == pytest.approx([3.0, -6.0, 1.5])
 
 
-def test_integral_modes_agree_for_full_memory():
-    # Without truncation both discretisations approximate the same operator;
-    # they differ by O(dt) only.
+def test_integral_modes_identical_for_full_memory():
+    # Exact identity: the partial sums of the GL weights of order 1-lambda are
+    # the GL weights of order -lambda, so without truncation the accumulated
+    # and the direct GL integral coincide to round-off.
     dt, n = 1e-3, 2000
     t = np.arange(n) * dt
     errors = np.sin(3 * t)
@@ -62,7 +63,7 @@ def test_integral_modes_agree_for_full_memory():
     b = FOPID(kp=0, ki=1, kd=0, lam=0.7, mu=0, dt=dt, memory=n, integral="gl")
     ua = np.array([a.step(e) for e in errors])
     ub = np.array([b.step(e) for e in errors])
-    assert np.max(np.abs(ua - ub)) < 5e-3 * np.max(np.abs(ub))
+    np.testing.assert_allclose(ua, ub, rtol=1e-9, atol=1e-12)
 
 
 # ------------------------------------------------------- closed loop

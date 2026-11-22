@@ -74,9 +74,13 @@ def test_oustaloup_at_least_as_accurate_as_fomcon_for_large_orders():
 def test_fopid_response_matches_fomcon_lsim():
     """Open-loop controller response u = C(s) e for a sine-plus-step error.
 
-    FOMCON simulates the continuous FOTF with its GL-based lsim; pyfopid runs
-    the discrete controller with full memory. Both are first-order GL schemes,
-    so they agree up to O(dt) differences in the treatment of the step.
+    FOMCON simulates the FOTF with its Grünwald-Letnikov based lsim; pyfopid
+    runs the discrete controller with full memory. Both evaluate the same GL
+    sums, so the responses coincide to round-off (measured: 7.5e-12 relative,
+    FOMCON 1.50.4, MATLAB R2026b), including at the step discontinuity.
+    With full memory the accumulated and direct integral modes are identical,
+    since the partial sums of the GL weights of order 1-lambda are the GL
+    weights of order -lambda.
     """
     p = _load("case2_fopid_params.csv")[0]
     d = _load("case2_fopid_response.csv")
@@ -84,9 +88,5 @@ def test_fopid_response_matches_fomcon_lsim():
         c = FOPID(kp=p["kp"], ki=p["ki"], kd=p["kd"], lam=p["lam"], mu=p["mu"],
                   dt=p["dt"], memory=d.size, integral=mode)
         u = np.array([c.step(e) for e in d["e"]])
-        scale = np.max(np.abs(d["u"]))
-        # exclude the samples right at the discontinuity (t = 1 s), where the
-        # fractional derivative of the step is singular
-        mask = np.abs(d["t"] - 1.0) > 0.05
-        rel_err = np.max(np.abs(u[mask] - d["u"][mask])) / scale
-        assert rel_err < 1e-2, f"{mode}: max relative error {rel_err:.2e}"
+        rel_err = np.max(np.abs(u - d["u"])) / np.max(np.abs(d["u"]))
+        assert rel_err < 1e-9, f"{mode}: max relative error {rel_err:.2e}"
